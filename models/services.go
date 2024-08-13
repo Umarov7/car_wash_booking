@@ -1,12 +1,13 @@
 package models
 
 type NewService struct {
-	Name        string  `bson:"name"`
-	Description string  `bson:"description"`
-	Price       float32 `bson:"price"`
-	Duration    int32   `bson:"duration"`
-	CreatedAt   string  `bson:"created_at"`
-	UpdatedAt   string  `bson:"updated_at"`
+	Name          string  `bson:"name"`
+	Description   string  `bson:"description"`
+	Price         float32 `bson:"price"`
+	Duration      int32   `bson:"duration"`
+	TotalBookings int32   `bson:"total_bookings"`
+	CreatedAt     string  `bson:"created_at"`
+	UpdatedAt     string  `bson:"updated_at"`
 }
 
 type NewServiceData struct {
@@ -26,13 +27,14 @@ type FilterService struct {
 }
 
 type Service struct {
-	Id          string  `bson:"_id"`
-	Name        string  `bson:"name"`
-	Description string  `bson:"description"`
-	Price       float32 `bson:"price"`
-	Duration    int32   `bson:"duration"`
-	CreatedAt   string  `bson:"created_at"`
-	UpdatedAt   string  `bson:"updated_at"`
+	Id            string  `bson:"_id"`
+	Name          string  `bson:"name"`
+	Description   string  `bson:"description"`
+	Price         float32 `bson:"price"`
+	Duration      int32   `bson:"duration"`
+	TotalBookings int32   `bson:"total_bookings"`
+	CreatedAt     string  `bson:"created_at"`
+	UpdatedAt     string  `bson:"updated_at"`
 }
 
 type Services struct {

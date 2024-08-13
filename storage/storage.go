@@ -32,6 +32,8 @@ type IServiceStorage interface {
 	Delete(ctx context.Context, id string) error
 	Fetch(ctx context.Context, page, limit int64) (*models.Services, error)
 	Search(ctx context.Context, req *models.FilterService) (*models.Services, error)
+	GetPopular(ctx context.Context) (*models.Services, error)
+	IncrementBookings(ctx context.Context, id string) error
 }
 
 type IBookingStorage interface {

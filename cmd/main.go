@@ -12,6 +12,7 @@ import (
 	"booking-service/kafka/consumer"
 	"booking-service/service"
 	mongodb "booking-service/storage/mongoDB"
+	"booking-service/storage/redis"
 	"log"
 	"net"
 
@@ -27,6 +28,12 @@ func main() {
 	}
 	defer db.Close()
 
+	redis, err := redis.ConnectDB(cfg)
+	if err != nil {
+		log.Fatalf("error while connecting to redis: %v", err)
+	}
+	defer redis.Close()
+
 	lis, err := net.Listen("tcp", cfg.BOOKING_SERVICE_PORT)
 	if err != nil {
 		log.Fatalf("error while listening: %v", err)
@@ -34,8 +41,8 @@ func main() {
 	defer lis.Close()
 
 	p := service.NewProviderService(db)
-	s := service.NewServiceService(db)
-	b := service.NewBookingService(db)
+	s := service.NewServiceService(db, redis)
+	b := service.NewBookingService(db, redis)
 	pay := service.NewPaymentService(db)
 	r := service.NewReviewService(db)
 	n := service.NewNotificationService(db)

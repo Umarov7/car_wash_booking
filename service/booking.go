@@ -5,6 +5,7 @@ import (
 	"booking-service/models"
 	"booking-service/pkg/logger"
 	"booking-service/storage"
+	"booking-service/storage/redis"
 	"context"
 	"log/slog"
 	"time"
@@ -15,12 +16,14 @@ import (
 type BookingService struct {
 	pb.UnimplementedBookingsServer
 	storage storage.IStorage
+	redis   *redis.Storage
 	logger  *slog.Logger
 }
 
-func NewBookingService(s storage.IStorage) *BookingService {
+func NewBookingService(s storage.IStorage, r *redis.Storage) *BookingService {
 	return &BookingService{
 		storage: s,
+		redis:   r,
 		logger:  logger.NewLogger(),
 	}
 }
@@ -50,6 +53,27 @@ func (s *BookingService) CreateBooking(ctx context.Context, req *pb.NewBooking) 
 	id, err := s.storage.Booking().Create(ctx, &bk)
 	if err != nil {
 		er := errors.Wrap(err, "failed to create booking")
+		s.logger.Error(er.Error())
+		return nil, er
+	}
+
+	err = s.storage.Service().IncrementBookings(ctx, bk.ServiceId)
+	if err != nil {
+		er := errors.Wrap(err, "failed to increment bookings")
+		s.logger.Error(er.Error())
+		return nil, er
+	}
+
+	sv, err := s.storage.Service().GetPopular(ctx)
+	if err != nil {
+		er := errors.Wrap(err, "failed to get popular services")
+		s.logger.Error(er.Error())
+		return nil, er
+	}
+
+	err = s.redis.StoreServices(ctx, sv.Services)
+	if err != nil {
+		er := errors.Wrap(err, "failed to store popular services in redis")
 		s.logger.Error(er.Error())
 		return nil, er
 	}

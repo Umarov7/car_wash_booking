@@ -12,6 +12,10 @@ type Config struct {
 	BOOKING_SERVICE_PORT             string
 	DB_URI                           string
 	DB_NAME                          string
+	REDIS_ADDRESS                    string
+	REDIS_PASSWORD                   string
+	REDIS_DB                         int
+	REDIS_KEY                        string
 	KAFKA_HOST                       string
 	KAFKA_PORT                       string
 	KAFKA_TOPIC_BOOKING_CREATED      string
@@ -41,6 +45,11 @@ func Load() *Config {
 
 	cfg.DB_URI = cast.ToString(coalesce("DB_URI", "mongodb://localhost:27017"))
 	cfg.DB_NAME = cast.ToString(coalesce("DB_NAME", "test"))
+
+	cfg.REDIS_ADDRESS = cast.ToString(coalesce("REDIS_ADDRESS", "localhost:6379"))
+	cfg.REDIS_PASSWORD = cast.ToString(coalesce("REDIS_PASSWORD", ""))
+	cfg.REDIS_DB = cast.ToInt(coalesce("REDIS_DB", 0))
+	cfg.REDIS_KEY = cast.ToString(coalesce("REDIS_KEY", "car-wash:popular-services"))
 
 	cfg.KAFKA_HOST = cast.ToString(coalesce("KAFKA_HOST", "localhost"))
 	cfg.KAFKA_PORT = cast.ToString(coalesce("KAFKA_PORT", "9092"))

@@ -87,3 +87,12 @@ func TestSearchService(t *testing.T) {
 		t.Error(err)
 	}
 }
+
+func TestGetPopularServices(t *testing.T) {
+	s := Service()
+
+	_, err := s.GetPopular(context.Background())
+	if err != nil {
+		t.Error(err)
+	}
+}

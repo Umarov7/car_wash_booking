@@ -5,6 +5,7 @@ import (
 	"booking-service/models"
 	"booking-service/pkg/logger"
 	"booking-service/storage"
+	"booking-service/storage/redis"
 	"context"
 	"log/slog"
 	"time"
@@ -15,12 +16,14 @@ import (
 type ServiceService struct {
 	pb.UnimplementedServicesServer
 	storage storage.IStorage
+	redis   *redis.Storage
 	logger  *slog.Logger
 }
 
-func NewServiceService(s storage.IStorage) *ServiceService {
+func NewServiceService(s storage.IStorage, r *redis.Storage) *ServiceService {
 	return &ServiceService{
 		storage: s,
+		redis:   r,
 		logger:  logger.NewLogger(),
 	}
 }
@@ -30,12 +33,13 @@ func (s *ServiceService) CreateService(ctx context.Context, req *pb.NewService) 
 
 	time := time.Now().Format(time.RFC3339)
 	sv := models.NewService{
-		Name:        req.Name,
-		Description: req.Description,
-		Price:       req.Price,
-		Duration:    req.Duration,
-		CreatedAt:   time,
-		UpdatedAt:   time,
+		Name:          req.Name,
+		Description:   req.Description,
+		Price:         req.Price,
+		Duration:      req.Duration,
+		TotalBookings: 0, // Default value
+		CreatedAt:     time,
+		UpdatedAt:     time,
 	}
 
 	id, err := s.storage.Service().Create(ctx, &sv)
@@ -61,13 +65,14 @@ func (s *ServiceService) GetService(ctx context.Context, req *pb.ID) (*pb.Servic
 	}
 
 	resp := &pb.Service{
-		Id:          sv.Id,
-		Name:        sv.Name,
-		Description: sv.Description,
-		Price:       sv.Price,
-		Duration:    sv.Duration,
-		CreatedAt:   sv.CreatedAt,
-		UpdatedAt:   sv.UpdatedAt,
+		Id:            sv.Id,
+		Name:          sv.Name,
+		Description:   sv.Description,
+		Price:         sv.Price,
+		Duration:      sv.Duration,
+		TotalBookings: sv.TotalBookings,
+		CreatedAt:     sv.CreatedAt,
+		UpdatedAt:     sv.UpdatedAt,
 	}
 
 	s.logger.Info("GetService is completed", slog.Any("response", resp))
@@ -126,13 +131,14 @@ func (s *ServiceService) ListServices(ctx context.Context, req *pb.Pagination) (
 	var services []*pb.Service
 	for _, service := range sv.Services {
 		services = append(services, &pb.Service{
-			Id:          service.Id,
-			Name:        service.Name,
-			Description: service.Description,
-			Price:       service.Price,
-			Duration:    service.Duration,
-			CreatedAt:   service.CreatedAt,
-			UpdatedAt:   service.UpdatedAt,
+			Id:            service.Id,
+			Name:          service.Name,
+			Description:   service.Description,
+			Price:         service.Price,
+			Duration:      service.Duration,
+			TotalBookings: service.TotalBookings,
+			CreatedAt:     service.CreatedAt,
+			UpdatedAt:     service.UpdatedAt,
 		})
 	}
 
@@ -158,16 +164,58 @@ func (s *ServiceService) SearchServices(ctx context.Context, req *pb.Filter) (*p
 	var services []*pb.Service
 	for _, service := range sv.Services {
 		services = append(services, &pb.Service{
-			Id:          service.Id,
-			Name:        service.Name,
-			Description: service.Description,
-			Price:       service.Price,
-			Duration:    service.Duration,
-			CreatedAt:   service.CreatedAt,
-			UpdatedAt:   service.UpdatedAt,
+			Id:            service.Id,
+			Name:          service.Name,
+			Description:   service.Description,
+			Price:         service.Price,
+			Duration:      service.Duration,
+			TotalBookings: service.TotalBookings,
+			CreatedAt:     service.CreatedAt,
+			UpdatedAt:     service.UpdatedAt,
 		})
 	}
 
 	s.logger.Info("SearchServices is completed", slog.Any("response", services))
+	return &pb.SearchResp{Services: services}, nil
+}
+
+func (s *ServiceService) GetPopularServices(ctx context.Context, req *pb.Void) (*pb.SearchResp, error) {
+	s.logger.Info("GetPopularServices is invoked", slog.Any("request", req))
+
+	sv, err := s.redis.GetServices(ctx)
+	if err != nil {
+		er := errors.Wrap(err, "failed to retrieve popular services from redis")
+		s.logger.Error(er.Error())
+
+		sv, err = s.storage.Service().GetPopular(ctx)
+		if err != nil {
+			er := errors.Wrap(err, "failed to get popular services")
+			s.logger.Error(er.Error())
+			return nil, er
+		}
+	} else if len(sv.Services) == 0 {
+		sv, err = s.storage.Service().GetPopular(ctx)
+		if err != nil {
+			er := errors.Wrap(err, "failed to get popular services")
+			s.logger.Error(er.Error())
+			return nil, er
+		}
+	}
+
+	var services []*pb.Service
+	for _, service := range sv.Services {
+		services = append(services, &pb.Service{
+			Id:            service.Id,
+			Name:          service.Name,
+			Description:   service.Description,
+			Price:         service.Price,
+			Duration:      service.Duration,
+			TotalBookings: service.TotalBookings,
+			CreatedAt:     service.CreatedAt,
+			UpdatedAt:     service.UpdatedAt,
+		})
+	}
+
+	s.logger.Info("GetPopularServices is completed", slog.Any("response", services))
 	return &pb.SearchResp{Services: services}, nil
 }

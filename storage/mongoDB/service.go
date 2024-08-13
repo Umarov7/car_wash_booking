@@ -157,3 +157,42 @@ func (r *ServiceRepo) Search(ctx context.Context, req *models.FilterService) (*m
 	}
 	return &models.Services{Services: services}, nil
 }
+
+func (r *ServiceRepo) GetPopular(ctx context.Context) (*models.Services, error) {
+	opts := options.Find()
+	opts.SetSort(bson.M{"total_bookings": -1})
+	opts.SetLimit(5)
+
+	cur, err := r.col.Find(ctx, bson.M{}, opts)
+	if err != nil {
+		return nil, errors.Wrap(err, "query execution failed")
+	}
+	defer cur.Close(ctx)
+
+	var services []*models.Service
+	for cur.Next(ctx) {
+		var sv models.Service
+		if err := cur.Decode(&sv); err != nil {
+			return nil, errors.Wrap(err, "decoding failed")
+		}
+		services = append(services, &sv)
+	}
+
+	if err := cur.Err(); err != nil {
+		return nil, errors.Wrap(err, "cursor error")
+	}
+	return &models.Services{Services: services}, nil
+}
+
+func (r *ServiceRepo) IncrementBookings(ctx context.Context, id string) error {
+	objId, err := primitive.ObjectIDFromHex(id)
+	if err != nil {
+		return errors.Wrap(err, "invalid id")
+	}
+
+	_, err = r.col.UpdateOne(ctx, bson.M{"_id": objId}, bson.M{"$inc": bson.M{"total_bookings": 1}})
+	if err != nil {
+		return errors.Wrap(err, "query execution failed")
+	}
+	return nil
+}
