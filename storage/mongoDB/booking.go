@@ -60,11 +60,34 @@ func (r *BookingRepo) Update(ctx context.Context, req *models.NewBookingData) er
 		return errors.Wrap(err, "invalid id")
 	}
 
+	set := bson.M{"updated_at": req.UpdatedAt}
+	if req.Status != "" {
+		set["status"] = req.Status
+	}
+	if req.ScheduledAt != "" {
+		set["scheduled_at"] = req.ScheduledAt
+	}
+	if req.Location.Address != "" {
+		set["location.address"] = req.Location.Address
+	}
+	if req.Location.City != "" {
+		set["location.city"] = req.Location.City
+	}
+	if req.Location.Country != "" {
+		set["location.country"] = req.Location.Country
+	}
+	if req.Location.Latitude != 0 {
+		set["location.latitude"] = req.Location.Latitude
+	}
+	if req.Location.Longitude != 0 {
+		set["location.longitude"] = req.Location.Longitude
+	}
+	if req.TotalPrice > 0 {
+		set["total_price"] = req.TotalPrice
+	}
+
 	filter := bson.M{"_id": objId}
-	update := bson.M{"$set": bson.M{
-		"status": req.Status, "scheduled_at": req.ScheduledAt, "location": req.Location,
-		"total_price": req.TotalPrice, "updated_at": req.UpdatedAt,
-	}}
+	update := bson.M{"$set": set}
 
 	_, err = r.col.UpdateOne(ctx, filter, update)
 	if err != nil {

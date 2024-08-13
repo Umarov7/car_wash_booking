@@ -17,6 +17,7 @@ type IStorage interface {
 type IProviderStorage interface {
 	Create(ctx context.Context, req *models.NewProvider) (string, error)
 	Search(ctx context.Context, req *models.FilterProvider) (*models.Providers, error)
+	UpdateRating(ctx context.Context, id string, rating float32) error
 }
 
 type IServiceStorage interface {

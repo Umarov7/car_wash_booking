@@ -46,6 +46,13 @@ func (s *ReviewService) CreateReview(ctx context.Context, req *pb.NewReview) (*p
 		return nil, er
 	}
 
+	err = s.storage.Provider().UpdateRating(ctx, req.ProviderId, float32(req.Rating))
+	if err != nil {
+		er := errors.Wrap(err, "failed to update provider rating")
+		s.logger.Error(er.Error())
+		return nil, er
+	}
+
 	resp := &pb.CreateResp{Id: id, CreatedAt: time}
 	s.logger.Info("CreateReview is completed", slog.Any("response", resp))
 	return resp, nil

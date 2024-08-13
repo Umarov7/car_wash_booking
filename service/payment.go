@@ -38,6 +38,20 @@ func (s *PaymentService) CreatePayment(ctx context.Context, req *pb.NewPayment) 
 		CreatedAt:     time,
 	}
 
+	if req.Status == "completed" {
+		err := s.storage.Booking().Update(ctx, &models.NewBookingData{
+			Id:        req.BookingId,
+			Status:    "completed",
+			TotalPrice: req.Amount,
+			UpdatedAt: time,
+		})
+		if err != nil {
+			er := errors.Wrap(err, "failed to update booking")
+			s.logger.Error(er.Error())
+			return nil, er
+		}
+	}
+
 	id, err := s.storage.Payment().Create(ctx, &pay)
 	if err != nil {
 		er := errors.Wrap(err, "failed to create payment")

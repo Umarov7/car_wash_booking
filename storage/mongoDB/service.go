@@ -39,11 +39,22 @@ func (r *ServiceRepo) Update(ctx context.Context, req *models.NewServiceData) er
 		return errors.Wrap(err, "invalid id")
 	}
 
+	set := bson.M{"updated_at": req.UpdatedAt}
+	if req.Name != "" {
+		set["name"] = req.Name
+	}
+	if req.Description != "" {
+		set["description"] = req.Description
+	}
+	if req.Price > 0 {
+		set["price"] = req.Price
+	}
+	if req.Duration > 0 {
+		set["duration"] = req.Duration
+	}
+
 	filter := bson.M{"_id": objId}
-	update := bson.M{"$set": bson.M{
-		"name": req.Name, "description": req.Description,
-		"price": req.Price, "duration": req.Duration, "updated_at": req.UpdatedAt,
-	}}
+	update := bson.M{"$set": set}
 
 	_, err = r.col.UpdateOne(ctx, filter, update)
 	if err != nil {

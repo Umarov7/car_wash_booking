@@ -67,3 +67,28 @@ func (r *ProviderRepo) Search(ctx context.Context, req *models.FilterProvider) (
 	}
 	return &models.Providers{Providers: providers}, nil
 }
+
+func (r *ProviderRepo) UpdateRating(ctx context.Context, id string, rating float32) error {
+	objId, err := primitive.ObjectIDFromHex(id)
+	if err != nil {
+		return errors.Wrap(err, "invalid id")
+	}
+
+	filter := bson.M{"_id": objId}
+
+	var pr models.Provider
+	err = r.col.FindOne(ctx, filter).Decode(pr)
+	if err != nil {
+		return errors.Wrap(err, "query execution failed")
+	}
+
+	newRating := (pr.AverageRating + rating) / 2
+
+	update := bson.M{"$set": bson.M{"average_rating": newRating}}
+
+	_, err = r.col.UpdateOne(ctx, filter, update)
+	if err != nil {
+		return errors.Wrap(err, "query execution failed")
+	}
+	return nil
+}
