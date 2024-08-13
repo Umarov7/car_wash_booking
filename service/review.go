@@ -58,6 +58,31 @@ func (s *ReviewService) CreateReview(ctx context.Context, req *pb.NewReview) (*p
 	return resp, nil
 }
 
+func (s *ReviewService) GetReview(ctx context.Context, req *pb.ID) (*pb.Review, error) {
+	s.logger.Info("GetReview is invoked", slog.Any("request", req))
+
+	rw, err := s.storage.Review().Get(ctx, req.Id)
+	if err != nil {
+		er := errors.Wrap(err, "failed to get review")
+		s.logger.Error(er.Error())
+		return nil, er
+	}
+
+	resp := &pb.Review{
+		Id:         rw.Id,
+		BookingId:  rw.BookingId,
+		UserId:     rw.UserId,
+		ProviderId: rw.ProviderId,
+		Rating:     rw.Rating,
+		Comment:    rw.Comment,
+		CreatedAt:  rw.CreatedAt,
+		UpdatedAt:  rw.UpdatedAt,
+	}
+
+	s.logger.Info("GetReview is completed", slog.Any("response", resp))
+	return resp, nil
+}
+
 func (s *ReviewService) UpdateReview(ctx context.Context, req *pb.NewData) (*pb.UpdateResp, error) {
 	s.logger.Info("UpdateReview is invoked", slog.Any("request", req))
 

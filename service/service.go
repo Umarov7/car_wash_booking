@@ -50,6 +50,30 @@ func (s *ServiceService) CreateService(ctx context.Context, req *pb.NewService) 
 	return resp, nil
 }
 
+func (s *ServiceService) GetService(ctx context.Context, req *pb.ID) (*pb.Service, error) {
+	s.logger.Info("GetService is invoked", slog.Any("request", req))
+
+	sv, err := s.storage.Service().Get(ctx, req.Id)
+	if err != nil {
+		er := errors.Wrap(err, "failed to get service")
+		s.logger.Error(er.Error())
+		return nil, er
+	}
+
+	resp := &pb.Service{
+		Id:          sv.Id,
+		Name:        sv.Name,
+		Description: sv.Description,
+		Price:       sv.Price,
+		Duration:    sv.Duration,
+		CreatedAt:   sv.CreatedAt,
+		UpdatedAt:   sv.UpdatedAt,
+	}
+
+	s.logger.Info("GetService is completed", slog.Any("response", resp))
+	return resp, nil
+}
+
 func (s *ServiceService) UpdateService(ctx context.Context, req *pb.NewData) (*pb.UpdateResp, error) {
 	s.logger.Info("UpdateService is invoked", slog.Any("request", req))
 
@@ -114,4 +138,36 @@ func (s *ServiceService) ListServices(ctx context.Context, req *pb.Pagination) (
 
 	s.logger.Info("ListServices is completed", slog.Any("response", services))
 	return &pb.ServicesList{Services: services, Page: req.Page, Limit: req.Limit}, nil
+}
+
+func (s *ServiceService) SearchServices(ctx context.Context, req *pb.Filter) (*pb.SearchResp, error) {
+	s.logger.Info("SearchServices is invoked", slog.Any("request", req))
+
+	sv, err := s.storage.Service().Search(ctx, &models.FilterService{
+		Name:      req.Name,
+		Price:     req.Price,
+		Duration:  req.Duration,
+		CreatedAt: req.CreatedAt,
+	})
+	if err != nil {
+		er := errors.Wrap(err, "failed to search services")
+		s.logger.Error(er.Error())
+		return nil, er
+	}
+
+	var services []*pb.Service
+	for _, service := range sv.Services {
+		services = append(services, &pb.Service{
+			Id:          service.Id,
+			Name:        service.Name,
+			Description: service.Description,
+			Price:       service.Price,
+			Duration:    service.Duration,
+			CreatedAt:   service.CreatedAt,
+			UpdatedAt:   service.UpdatedAt,
+		})
+	}
+
+	s.logger.Info("SearchServices is completed", slog.Any("response", services))
+	return &pb.SearchResp{Services: services}, nil
 }
