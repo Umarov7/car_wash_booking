@@ -50,7 +50,6 @@ func (r *BookingRepo) Get(ctx context.Context, id string) (*models.Booking, erro
 	if err := res.Decode(&b); err != nil {
 		return nil, errors.Wrap(err, "decoding failed")
 	}
-
 	return &b, nil
 }
 

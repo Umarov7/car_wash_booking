@@ -39,6 +39,15 @@ func TestCreateReview(t *testing.T) {
 	}
 }
 
+func TestGetReview(t *testing.T) {
+	r := Review()
+
+	_, err := r.Get(context.Background(), "") // ObjectIdHex
+	if err != nil {
+		t.Error(err)
+	}
+}
+
 func TestUpdateReview(t *testing.T) {
 	r := Review()
 

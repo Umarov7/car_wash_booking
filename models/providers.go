@@ -42,3 +42,14 @@ type Provider struct {
 type Providers struct {
 	Providers []*Provider `bson:"providers"`
 }
+
+type NewProviderData struct {
+	Id            string   `bson:"_id"`
+	CompanyName   string   `bson:"company_name"`
+	Description   string   `bson:"description"`
+	Services      []string `bson:"services"`
+	Availability  []string `bson:"availability"`
+	AverageRating float32  `bson:"average_rating"`
+	Location      Location `bson:"location"`
+	UpdatedAt     string   `bson:"updated_at"`
+}

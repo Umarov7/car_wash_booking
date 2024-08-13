@@ -33,6 +33,24 @@ func (r *ReviewRepo) Create(ctx context.Context, req *models.NewReview) (string,
 	return id.Hex(), nil
 }
 
+func (r *ReviewRepo) Get(ctx context.Context, id string) (*models.Review, error) {
+	objId, err := primitive.ObjectIDFromHex(id)
+	if err != nil {
+		return nil, errors.Wrap(err, "invalid id")
+	}
+
+	res := r.col.FindOne(ctx, bson.M{"_id": objId})
+	if res.Err() != nil {
+		return nil, errors.Wrap(res.Err(), "query execution failed")
+	}
+
+	var rv models.Review
+	if err := res.Decode(&rv); err != nil {
+		return nil, errors.Wrap(err, "decoding failed")
+	}
+	return &rv, nil
+}
+
 func (r *ReviewRepo) Update(ctx context.Context, req *models.NewReviewData) error {
 	objId, err := primitive.ObjectIDFromHex(req.Id)
 	if err != nil {

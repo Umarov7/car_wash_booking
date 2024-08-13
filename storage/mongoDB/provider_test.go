@@ -48,6 +48,56 @@ func TestCreateProvider(t *testing.T) {
 	}
 }
 
+func TestGetProvider(t *testing.T) {
+	p := Provider()
+
+	_, err := p.Get(context.Background(), "") // ObjectIdHex
+	if err != nil {
+		t.Error(err)
+	}
+}
+
+func TestUpdateProvider(t *testing.T) {
+	p := Provider()
+
+	err := p.Update(context.Background(), &models.NewProviderData{
+		Id:            "", // ObjectIdHex
+		CompanyName:   "test",
+		Description:   "test",
+		Services:      []string{"testing"},
+		AverageRating: 3,
+		Location: models.Location{
+			Address:   "addres",
+			City:      "city",
+			Country:   "country",
+			Latitude:  1.0,
+			Longitude: 1.0,
+		},
+		UpdatedAt: time.Now().Format(time.RFC3339),
+	})
+	if err != nil {
+		t.Error(err)
+	}
+}
+
+func TestDeleteProvider(t *testing.T) {
+	p := Provider()
+
+	err := p.Delete(context.Background(), "") // ObjectIdHex
+	if err != nil {
+		t.Error(err)
+	}
+}
+
+func TestFetchProvider(t *testing.T) {
+	p := Provider()
+
+	_, err := p.Fetch(context.Background(), 1, 10)
+	if err != nil {
+		t.Error(err)
+	}
+}
+
 func TestSearchProviders(t *testing.T) {
 	p := Provider()
 

@@ -33,6 +33,24 @@ func (r *ServiceRepo) Create(ctx context.Context, req *models.NewService) (strin
 	return id.Hex(), nil
 }
 
+func (r *ServiceRepo) Get(ctx context.Context, id string) (*models.Service, error) {
+	objId, err := primitive.ObjectIDFromHex(id)
+	if err != nil {
+		return nil, errors.Wrap(err, "invalid id")
+	}
+
+	res := r.col.FindOne(ctx, bson.M{"_id": objId})
+	if res.Err() != nil {
+		return nil, errors.Wrap(res.Err(), "query execution failed")
+	}
+
+	var s models.Service
+	if err := res.Decode(&s); err != nil {
+		return nil, errors.Wrap(err, "decoding failed")
+	}
+	return &s, nil
+}
+
 func (r *ServiceRepo) Update(ctx context.Context, req *models.NewServiceData) error {
 	objId, err := primitive.ObjectIDFromHex(req.Id)
 	if err != nil {

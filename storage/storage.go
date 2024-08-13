@@ -17,12 +17,17 @@ type IStorage interface {
 
 type IProviderStorage interface {
 	Create(ctx context.Context, req *models.NewProvider) (string, error)
+	Get(ctx context.Context, id string) (*models.Provider, error)
+	Update(ctx context.Context, req *models.NewProviderData) error
+	Delete(ctx context.Context, id string) error
+	Fetch(ctx context.Context, page, limit int64) (*models.Providers, error)
 	Search(ctx context.Context, req *models.FilterProvider) (*models.Providers, error)
 	UpdateRating(ctx context.Context, id string, rating float32) error
 }
 
 type IServiceStorage interface {
 	Create(ctx context.Context, req *models.NewService) (string, error)
+	Get(ctx context.Context, id string) (*models.Service, error)
 	Update(ctx context.Context, req *models.NewServiceData) error
 	Delete(ctx context.Context, id string) error
 	Fetch(ctx context.Context, page, limit int64) (*models.Services, error)
@@ -45,6 +50,7 @@ type IPaymentStorage interface {
 
 type IReviewStorage interface {
 	Create(ctx context.Context, req *models.NewReview) (string, error)
+	Get(ctx context.Context, id string) (*models.Review, error)
 	Update(ctx context.Context, req *models.NewReviewData) error
 	Delete(ctx context.Context, id string) error
 	Fetch(ctx context.Context, page, limit int64) (*models.Reviews, error)

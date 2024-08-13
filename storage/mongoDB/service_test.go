@@ -36,6 +36,15 @@ func TestCreateService(t *testing.T) {
 	}
 }
 
+func TestGetService(t *testing.T) {
+	s := Service()
+
+	_, err := s.Get(context.Background(), "") // ObjectIdHex
+	if err != nil {
+		t.Error(err)
+	}
+}
+
 func TestUpdateService(t *testing.T) {
 	s := Service()
 
