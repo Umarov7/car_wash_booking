@@ -10,7 +10,7 @@ type NewService struct {
 }
 
 type NewServiceData struct {
-	Id          string  `bson:"id"`
+	Id          string  `bson:"_id"`
 	Name        string  `bson:"name"`
 	Description string  `bson:"description"`
 	Price       float32 `bson:"price"`
@@ -26,7 +26,7 @@ type FilterService struct {
 }
 
 type Service struct {
-	Id          string  `bson:"id"`
+	Id          string  `bson:"_id"`
 	Name        string  `bson:"name"`
 	Description string  `bson:"description"`
 	Price       float32 `bson:"price"`

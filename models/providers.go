@@ -27,7 +27,7 @@ type FilterProvider struct {
 }
 
 type Provider struct {
-	Id            string   `bson:"id"`
+	Id            string   `bson:"_id"`
 	UserId        string   `bson:"user_id"`
 	CompanyName   string   `bson:"company_name"`
 	Description   string   `bson:"description"`

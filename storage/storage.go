@@ -11,6 +11,7 @@ type IStorage interface {
 	Booking() IBookingStorage
 	Payment() IPaymentStorage
 	Review() IReviewStorage
+	Notification() INotificationStorage
 	Close()
 }
 
@@ -47,4 +48,9 @@ type IReviewStorage interface {
 	Update(ctx context.Context, req *models.NewReviewData) error
 	Delete(ctx context.Context, id string) error
 	Fetch(ctx context.Context, page, limit int64) (*models.Reviews, error)
+}
+
+type INotificationStorage interface {
+	Create(ctx context.Context, req *models.NewNotification) (string, error)
+	Get(ctx context.Context, id string) (*models.Notification, error)
 }

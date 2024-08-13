@@ -10,7 +10,7 @@ type NewPayment struct {
 }
 
 type Payment struct {
-	Id            string  `bson:"id"`
+	Id            string  `bson:"_id"`
 	BookingId     string  `bson:"booking_id"`
 	Amount        float32 `bson:"amount"`
 	Status        string  `bson:"status"`

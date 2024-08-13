@@ -3,6 +3,7 @@ package main
 import (
 	"booking-service/config"
 	pbb "booking-service/genproto/bookings"
+	pbn "booking-service/genproto/notifications"
 	pbpa "booking-service/genproto/payments"
 	pbp "booking-service/genproto/providers"
 	pbr "booking-service/genproto/reviews"
@@ -36,6 +37,7 @@ func main() {
 	pbb.RegisterBookingsServer(server, service.NewBookingService(db))
 	pbpa.RegisterPaymentsServer(server, service.NewPaymentService(db))
 	pbr.RegisterReviewsServer(server, service.NewReviewService(db))
+	pbn.RegisterNotificationsServer(server, service.NewNotificationService(db))
 
 	log.Printf("Service is listening on port %s...\n", cfg.BOOKING_SERVICE_PORT)
 	if err := server.Serve(lis); err != nil {

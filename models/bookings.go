@@ -13,7 +13,7 @@ type NewBooking struct {
 }
 
 type Booking struct {
-	Id          string   `bson:"id"`
+	Id          string   `bson:"_id"`
 	UserId      string   `bson:"user_id"`
 	ProviderId  string   `bson:"provider_id"`
 	ServiceId   string   `bson:"service_id"`
@@ -26,7 +26,7 @@ type Booking struct {
 }
 
 type NewBookingData struct {
-	Id          string   `bson:"id"`
+	Id          string   `bson:"_id"`
 	Status      string   `bson:"status"`
 	ScheduledAt string   `bson:"scheduled_at"`
 	Location    Location `bson:"location"`

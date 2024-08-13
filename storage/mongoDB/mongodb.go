@@ -55,3 +55,7 @@ func (m *MongoDB) Payment() storage.IPaymentStorage {
 func (m *MongoDB) Review() storage.IReviewStorage {
 	return NewReviewRepo(m.db)
 }
+
+func (m *MongoDB) Notification() storage.INotificationStorage {
+	return NewNotificationRepo(m.db)
+}

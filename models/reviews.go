@@ -11,14 +11,14 @@ type NewReview struct {
 }
 
 type NewReviewData struct {
-	Id        string `bson:"id"`
+	Id        string `bson:"_id"`
 	Rating    int32  `bson:"rating"`
 	Comment   string `bson:"comment"`
 	UpdatedAt string `bson:"updated_at"`
 }
 
 type Review struct {
-	Id         string `bson:"id"`
+	Id         string `bson:"_id"`
 	BookingId  string `bson:"booking_id"`
 	UserId     string `bson:"user_id"`
 	ProviderId string `bson:"provider_id"`
