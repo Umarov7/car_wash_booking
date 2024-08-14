@@ -181,7 +181,6 @@ func (s *ProviderService) SearchProviders(ctx context.Context, req *pb.Filter) (
 	resp, err := s.storage.Provider().Search(ctx, &models.FilterProvider{
 		CompanyName:   req.CompanyName,
 		AverageRating: req.AverageRating,
-		CreatedAt:     req.CreatedAt,
 	})
 	if err != nil {
 		er := errors.Wrap(err, "failed to find providers")

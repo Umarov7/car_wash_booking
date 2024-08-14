@@ -23,7 +23,6 @@ type NewProvider struct {
 type FilterProvider struct {
 	CompanyName   string  `bson:"company_name"`
 	AverageRating float32 `bson:"average_rating"`
-	CreatedAt     string  `bson:"created_at"`
 }
 
 type Provider struct {

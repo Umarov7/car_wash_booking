@@ -20,10 +20,9 @@ type NewServiceData struct {
 }
 
 type FilterService struct {
-	Name      string  `bson:"name"`
-	Price     float32 `bson:"price"`
-	Duration  int32   `bson:"duration"`
-	CreatedAt string  `bson:"created_at"`
+	Name     string  `bson:"name"`
+	Price    float32 `bson:"price"`
+	Duration int32   `bson:"duration"`
 }
 
 type Service struct {

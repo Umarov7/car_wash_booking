@@ -133,9 +133,6 @@ func (r *ServiceRepo) Search(ctx context.Context, req *models.FilterService) (*m
 	if req.Duration > 0 {
 		filter["duration"] = bson.M{"$gte": req.Duration}
 	}
-	if req.CreatedAt != "" {
-		filter["created_at"] = bson.M{"$gte": req.CreatedAt}
-	}
 
 	cur, err := r.col.Find(ctx, filter, opts)
 	if err != nil {

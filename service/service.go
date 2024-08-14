@@ -150,10 +150,9 @@ func (s *ServiceService) SearchServices(ctx context.Context, req *pb.Filter) (*p
 	s.logger.Info("SearchServices is invoked", slog.Any("request", req))
 
 	sv, err := s.storage.Service().Search(ctx, &models.FilterService{
-		Name:      req.Name,
-		Price:     req.Price,
-		Duration:  req.Duration,
-		CreatedAt: req.CreatedAt,
+		Name:     req.Name,
+		Price:    req.Price,
+		Duration: req.Duration,
 	})
 	if err != nil {
 		er := errors.Wrap(err, "failed to search services")

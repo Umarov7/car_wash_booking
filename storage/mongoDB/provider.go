@@ -136,10 +136,7 @@ func (r *ProviderRepo) Search(ctx context.Context, req *models.FilterProvider) (
 	if req.AverageRating > 0 {
 		filter["average_rating"] = bson.M{"$gte": req.AverageRating}
 	}
-	if req.CreatedAt != "" {
-		filter["created_at"] = bson.M{"$gte": req.CreatedAt}
-	}
-
+	
 	cur, err := r.col.Find(ctx, filter, opts)
 	if err != nil {
 		return nil, errors.Wrap(err, "query execution failed")
