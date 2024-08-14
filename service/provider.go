@@ -172,7 +172,7 @@ func (s *ProviderService) ListProviders(ctx context.Context, req *pb.Pagination)
 	}
 
 	s.logger.Info("ListProviders is completed", slog.Any("response", providers))
-	return &pb.ProvidersList{Providers: providers}, nil
+	return &pb.ProvidersList{Providers: providers, Page: req.Page, Limit: req.Limit}, nil
 }
 
 func (s *ProviderService) SearchProviders(ctx context.Context, req *pb.Filter) (*pb.SearchResp, error) {

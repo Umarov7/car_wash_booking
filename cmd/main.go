@@ -10,11 +10,9 @@ import (
 	pbs "booking-service/genproto/services"
 	"booking-service/kafka"
 	"booking-service/kafka/consumer"
-	"booking-service/pkg/db"
 	"booking-service/service"
 	mongodb "booking-service/storage/mongoDB"
 	"booking-service/storage/redis"
-	"context"
 	"log"
 	"net"
 
@@ -36,9 +34,9 @@ func main() {
 	}
 	defer redis.Close()
 
-	if err := db.SeedData(context.Background(), cfg); err != nil {
-		log.Fatalf("error while initializing mongoDB: %v", err)
-	}
+	// if err := db.SeedData(context.Background(), cfg); err != nil {
+	// 	log.Fatalf("error while initializing mongoDB: %v", err)
+	// }
 
 	lis, err := net.Listen("tcp", cfg.BOOKING_SERVICE_PORT)
 	if err != nil {
