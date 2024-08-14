@@ -172,9 +172,9 @@ func (r *ProviderRepo) UpdateRating(ctx context.Context, id string, rating float
 	filter := bson.M{"_id": objId}
 
 	var pr models.Provider
-	err = r.col.FindOne(ctx, filter).Decode(pr)
+	err = r.col.FindOne(ctx, filter).Decode(&pr)
 	if err != nil {
-		return errors.Wrap(err, "query execution failed")
+		return errors.Wrap(err, "document not found")
 	}
 
 	newRating := (pr.AverageRating + rating) / 2
