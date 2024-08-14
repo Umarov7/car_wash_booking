@@ -43,7 +43,7 @@ func Load() *Config {
 
 	cfg.BOOKING_SERVICE_PORT = cast.ToString(coalesce("BOOKING_SERVICE_PORT", ":50052"))
 
-	cfg.DB_URI = cast.ToString(coalesce("DB_URI", "mongodb://localhost:27017"))
+	cfg.DB_URI = cast.ToString(coalesce("DB_URI", "mongodb://mongodb:27017"))
 	cfg.DB_NAME = cast.ToString(coalesce("DB_NAME", "test"))
 
 	cfg.REDIS_ADDRESS = cast.ToString(coalesce("REDIS_ADDRESS", "localhost:6379"))
