@@ -10,9 +10,11 @@ import (
 	pbs "booking-service/genproto/services"
 	"booking-service/kafka"
 	"booking-service/kafka/consumer"
+	"booking-service/pkg/db"
 	"booking-service/service"
 	mongodb "booking-service/storage/mongoDB"
 	"booking-service/storage/redis"
+	"context"
 	"log"
 	"net"
 
@@ -22,11 +24,11 @@ import (
 func main() {
 	cfg := config.Load()
 
-	db, err := mongodb.ConnectDB(cfg)
+	mongo, err := mongodb.ConnectDB(cfg)
 	if err != nil {
-		log.Fatalf("error while connecting to mongodb: %v", err)
+		log.Fatalf("error while connecting to mongoDB: %v", err)
 	}
-	defer db.Close()
+	defer mongo.Close()
 
 	redis, err := redis.ConnectDB(cfg)
 	if err != nil {
@@ -34,18 +36,22 @@ func main() {
 	}
 	defer redis.Close()
 
+	if err := db.SeedData(context.Background(), cfg); err != nil {
+		log.Fatalf("error while initializing mongoDB: %v", err)
+	}
+
 	lis, err := net.Listen("tcp", cfg.BOOKING_SERVICE_PORT)
 	if err != nil {
 		log.Fatalf("error while listening: %v", err)
 	}
 	defer lis.Close()
 
-	p := service.NewProviderService(db)
-	s := service.NewServiceService(db, redis)
-	b := service.NewBookingService(db, redis)
-	pay := service.NewPaymentService(db)
-	r := service.NewReviewService(db)
-	n := service.NewNotificationService(db)
+	p := service.NewProviderService(mongo)
+	s := service.NewServiceService(mongo, redis)
+	b := service.NewBookingService(mongo, redis)
+	pay := service.NewPaymentService(mongo)
+	r := service.NewReviewService(mongo)
+	n := service.NewNotificationService(mongo)
 	server := grpc.NewServer()
 
 	pbp.RegisterProvidersServer(server, p)
