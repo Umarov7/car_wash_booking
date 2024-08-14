@@ -46,7 +46,7 @@ func Load() *Config {
 	cfg.DB_URI = cast.ToString(coalesce("DB_URI", "mongodb://mongodb:27017"))
 	cfg.DB_NAME = cast.ToString(coalesce("DB_NAME", "test"))
 
-	cfg.REDIS_ADDRESS = cast.ToString(coalesce("REDIS_ADDRESS", "localhost:6379"))
+	cfg.REDIS_ADDRESS = cast.ToString(coalesce("REDIS_ADDRESS", "redis:6379"))
 	cfg.REDIS_PASSWORD = cast.ToString(coalesce("REDIS_PASSWORD", ""))
 	cfg.REDIS_DB = cast.ToInt(coalesce("REDIS_DB", 0))
 	cfg.REDIS_KEY = cast.ToString(coalesce("REDIS_KEY", "car-wash:popular-services"))
