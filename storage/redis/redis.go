@@ -32,20 +32,25 @@ func ConnectDB(cfg *config.Config) (*Storage, error) {
 }
 
 func (r *Storage) StoreServices(ctx context.Context, services []*models.Service) error {
+	err := r.db.Del(ctx, r.config.REDIS_KEY).Err()
+	if err != nil {
+		return errors.Wrap(err, "failed to delete existing services")
+	}
+
 	for _, service := range services {
 		serviceJSON, err := json.Marshal(service)
 		if err != nil {
 			return errors.Wrap(err, "failed to serialize service object")
 		}
 
-		err = r.db.HSet(ctx, r.config.REDIS_KEY, service.Id, serviceJSON).Err()
+		err = r.db.RPush(ctx, r.config.REDIS_KEY, serviceJSON).Err()
 		if err != nil {
 			return errors.Wrap(err, "failed to store service")
 		}
 
 	}
 
-	err := r.db.Expire(ctx, r.config.REDIS_KEY, time.Minute*10).Err()
+	err = r.db.Expire(ctx, r.config.REDIS_KEY, time.Minute*10).Err()
 	if err != nil {
 		return errors.Wrap(err, "failed to set expiration time")
 	}
@@ -54,7 +59,7 @@ func (r *Storage) StoreServices(ctx context.Context, services []*models.Service)
 }
 
 func (r *Storage) GetServices(ctx context.Context) (*models.Services, error) {
-	services, err := r.db.HGetAll(ctx, r.config.REDIS_KEY).Result()
+	services, err := r.db.LRange(ctx, r.config.REDIS_KEY, 0, -1).Result()
 	if err != nil {
 		return nil, errors.Wrap(err, "failed to get services")
 	}
