@@ -3,12 +3,18 @@ package db
 import (
 	"booking-service/models"
 	"time"
+
+	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
-func providerData() []*models.Provider {
-	return []*models.Provider{
+func providerData() []*models.ProviderObj {
+	id1, _ := primitive.ObjectIDFromHex("64b0b9c12f2b5d7c3e6f4d91")
+	id2, _ := primitive.ObjectIDFromHex("64b0b9c12f2b5d7c3e6f4d92")
+	id3, _ := primitive.ObjectIDFromHex("64b0b9c12f2b5d7c3e6f4d93")
+
+	return []*models.ProviderObj{
 		{
-			Id:            "64b0b9c12f2b5d7c3e6f4d91",
+			Id:            id1,
 			UserId:        "4f7a2b34-0d1c-45e3-8a4f-2c4f6b9c0d5b",
 			CompanyName:   "Tech Solutions Inc.",
 			Description:   "Providing cutting-edge tech solutions for businesses.",
@@ -26,7 +32,7 @@ func providerData() []*models.Provider {
 			UpdatedAt: time.Now().Format(time.RFC3339),
 		},
 		{
-			Id:            "64b0b9c12f2b5d7c3e6f4d92",
+			Id:            id2,
 			UserId:        "7d56e4a1-1d62-4b5e-9a7a-28f6f6d2b3c4",
 			CompanyName:   "Green Energy Solutions",
 			Description:   "Expertise in sustainable energy and green technologies.",
@@ -44,7 +50,7 @@ func providerData() []*models.Provider {
 			UpdatedAt: time.Now().Format(time.RFC3339),
 		},
 		{
-			Id:            "64b0b9c12f2b5d7c3e6f4d93",
+			Id:            id3,
 			UserId:        "3e7f8a1b-5c6d-4e8a-9a0b-89e4d6f7c2d9",
 			CompanyName:   "Creative Designs Studio",
 			Description:   "Bringing your creative vision to life with innovative design solutions.",

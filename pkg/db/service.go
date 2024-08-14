@@ -3,12 +3,21 @@ package db
 import (
 	"booking-service/models"
 	"time"
+
+	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
-func serviceData() []*models.Service {
-	return []*models.Service{
+func serviceData() []*models.ServiceObj {
+	id1, _ := primitive.ObjectIDFromHex("64b0b9c12f2b5d7c3e6f4d94")
+	id2, _ := primitive.ObjectIDFromHex("64b0b9c12f2b5d7c3e6f4d95")
+	id3, _ := primitive.ObjectIDFromHex("64b0b9c12f2b5d7c3e6f4d96")
+	id4, _ := primitive.ObjectIDFromHex("64b0b9c12f2b5d7c3e6f4d97")
+	id5, _ := primitive.ObjectIDFromHex("64b0b9c12f2b5d7c3e6f4d98")
+	id6, _ := primitive.ObjectIDFromHex("64b0b9c12f2b5d7c3e6f4d99")
+
+	return []*models.ServiceObj{
 		{
-			Id:            "64b0b9c12f2b5d7c3e6f4d94",
+			Id:            id1,
 			Name:          "Custom Software Development",
 			Description:   "Tailor-made software solutions to meet specific business needs.",
 			Price:         5000.00,
@@ -18,7 +27,7 @@ func serviceData() []*models.Service {
 			UpdatedAt:     time.Now().Format(time.RFC3339),
 		},
 		{
-			Id:            "64b0b9c12f2b5d7c3e6f4d95",
+			Id:            id2,
 			Name:          "IT Consultation",
 			Description:   "Expert advice on IT infrastructure and strategy.",
 			Price:         200.00,
@@ -28,7 +37,7 @@ func serviceData() []*models.Service {
 			UpdatedAt:     time.Now().Format(time.RFC3339),
 		},
 		{
-			Id:            "64b0b9c12f2b5d7c3e6f4d96",
+			Id:            id3,
 			Name:          "Solar Panel Installation",
 			Description:   "Complete installation of solar panels for residential and commercial use.",
 			Price:         12000.00,
@@ -38,7 +47,7 @@ func serviceData() []*models.Service {
 			UpdatedAt:     time.Now().Format(time.RFC3339),
 		},
 		{
-			Id:            "64b0b9c12f2b5d7c3e6f4d97",
+			Id:            id4,
 			Name:          "Energy Consulting",
 			Description:   "Consultation on optimizing energy usage and implementing green technologies.",
 			Price:         300.00,
@@ -48,7 +57,7 @@ func serviceData() []*models.Service {
 			UpdatedAt:     time.Now().Format(time.RFC3339),
 		},
 		{
-			Id:            "64b0b9c12f2b5d7c3e6f4d98",
+			Id:            id5,
 			Name:          "Graphic Design",
 			Description:   "Custom graphic design services including branding and marketing materials.",
 			Price:         1000.00,
@@ -58,7 +67,7 @@ func serviceData() []*models.Service {
 			UpdatedAt:     time.Now().Format(time.RFC3339),
 		},
 		{
-			Id:            "64b0b9c12f2b5d7c3e6f4d99",
+			Id:            id6,
 			Name:          "Web Design",
 			Description:   "Design and development of responsive and engaging websites.",
 			Price:         2500.00,

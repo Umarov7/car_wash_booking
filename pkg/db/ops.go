@@ -35,22 +35,22 @@ func convertToInterfaceSlice[T any](data []T) []interface{} {
 	return documents
 }
 
-func insertProviders(ctx context.Context, c *mongo.Collection, data []*models.Provider) error {
+func insertProviders(ctx context.Context, c *mongo.Collection, data []*models.ProviderObj) error {
 	return insertData(ctx, c, convertToInterfaceSlice(data), "providers")
 }
 
-func insertServices(ctx context.Context, c *mongo.Collection, data []*models.Service) error {
+func insertServices(ctx context.Context, c *mongo.Collection, data []*models.ServiceObj) error {
 	return insertData(ctx, c, convertToInterfaceSlice(data), "services")
 }
 
-func insertBookings(ctx context.Context, c *mongo.Collection, data []*models.Booking) error {
+func insertBookings(ctx context.Context, c *mongo.Collection, data []*models.BookingObj) error {
 	return insertData(ctx, c, convertToInterfaceSlice(data), "bookings")
 }
 
-func insertPayments(ctx context.Context, c *mongo.Collection, data []*models.Payment) error {
+func insertPayments(ctx context.Context, c *mongo.Collection, data []*models.PaymentObj) error {
 	return insertData(ctx, c, convertToInterfaceSlice(data), "payments")
 }
 
-func insertReviews(ctx context.Context, c *mongo.Collection, data []*models.Review) error {
+func insertReviews(ctx context.Context, c *mongo.Collection, data []*models.ReviewObj) error {
 	return insertData(ctx, c, convertToInterfaceSlice(data), "reviews")
 }

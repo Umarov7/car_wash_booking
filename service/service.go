@@ -193,6 +193,8 @@ func (s *ServiceService) GetPopularServices(ctx context.Context, req *pb.Void) (
 			return nil, er
 		}
 	} else if len(sv.Services) == 0 {
+		s.logger.Info("No popular services found in redis, fetching from database")
+
 		sv, err = s.storage.Service().GetPopular(ctx)
 		if err != nil {
 			er := errors.Wrap(err, "failed to get popular services")
