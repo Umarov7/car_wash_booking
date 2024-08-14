@@ -93,10 +93,15 @@ func (r *ProviderRepo) Delete(ctx context.Context, id string) error {
 		return errors.Wrap(err, "invalid id")
 	}
 
-	_, err = r.col.DeleteOne(ctx, bson.M{"_id": objId})
+	res, err := r.col.DeleteOne(ctx, bson.M{"_id": objId})
 	if err != nil {
 		return errors.Wrap(err, "query execution failed")
 	}
+
+	if res.DeletedCount == 0 {
+		return errors.New("document not found")
+	}
+
 	return nil
 }
 
@@ -136,7 +141,7 @@ func (r *ProviderRepo) Search(ctx context.Context, req *models.FilterProvider) (
 	if req.AverageRating > 0 {
 		filter["average_rating"] = bson.M{"$gte": req.AverageRating}
 	}
-	
+
 	cur, err := r.col.Find(ctx, filter, opts)
 	if err != nil {
 		return nil, errors.Wrap(err, "query execution failed")

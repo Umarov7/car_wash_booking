@@ -76,10 +76,15 @@ func (r *ReviewRepo) Delete(ctx context.Context, id string) error {
 	}
 
 	filter := bson.M{"_id": objId}
-	_, err = r.col.DeleteOne(ctx, filter)
+	res, err := r.col.DeleteOne(ctx, filter)
 	if err != nil {
 		return errors.Wrap(err, "query execution failed")
 	}
+
+	if res.DeletedCount == 0 {
+		return errors.New("document not found")
+	}
+
 	return nil
 }
 

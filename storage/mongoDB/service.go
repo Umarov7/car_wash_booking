@@ -87,10 +87,15 @@ func (r *ServiceRepo) Delete(ctx context.Context, id string) error {
 		return errors.Wrap(err, "invalid id")
 	}
 
-	_, err = r.col.DeleteOne(ctx, bson.M{"_id": objId})
+	res, err := r.col.DeleteOne(ctx, bson.M{"_id": objId})
 	if err != nil {
 		return errors.Wrap(err, "query execution failed")
 	}
+
+	if res.DeletedCount == 0 {
+		return errors.New("document not found")
+	}
+
 	return nil
 }
 
