@@ -51,7 +51,7 @@ func Load() *Config {
 	cfg.REDIS_DB = cast.ToInt(coalesce("REDIS_DB", 0))
 	cfg.REDIS_KEY = cast.ToString(coalesce("REDIS_KEY", "car-wash:popular-services"))
 
-	cfg.KAFKA_HOST = cast.ToString(coalesce("KAFKA_HOST", "localhost"))
+	cfg.KAFKA_HOST = cast.ToString(coalesce("KAFKA_HOST", "kafka"))
 	cfg.KAFKA_PORT = cast.ToString(coalesce("KAFKA_PORT", "9092"))
 
 	cfg.KAFKA_TOPIC_BOOKING_CREATED = cast.ToString(coalesce("KAFKA_TOPIC_BOOKING_CREATED", "car-wash.booking_created"))
