@@ -203,6 +203,13 @@ func (s *ServiceService) GetPopularServices(ctx context.Context, req *pb.Void) (
 		}
 	}
 
+	err = s.redis.StoreServices(ctx, sv.Services)
+	if err != nil {
+		er := errors.Wrap(err, "failed to store popular services in redis")
+		s.logger.Error(er.Error())
+		return nil, er
+	}
+
 	var services []*pb.Service
 	for _, service := range sv.Services {
 		services = append(services, &pb.Service{
