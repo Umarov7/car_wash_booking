@@ -17,11 +17,14 @@ import (
 	"context"
 	"log"
 	"net"
+	"time"
 
 	"google.golang.org/grpc"
 )
 
 func main() {
+	time.Sleep(15 * time.Second)
+
 	cfg := config.Load()
 
 	mongo, err := mongodb.ConnectDB(cfg)
